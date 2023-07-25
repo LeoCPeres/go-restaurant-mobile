@@ -1,4 +1,9 @@
+import { useState } from "react";
+import { Image } from "react-native";
+
 import { FoodProps } from "../../@types/FoodProps";
+import { formatPrice } from "../../utils/format";
+
 import {
   Content,
   Description,
@@ -8,13 +13,13 @@ import {
   Title,
 } from "./styles";
 
-import { formatPrice } from "../../utils/format";
-
 type FoodCardProps = {
   food: FoodProps;
 };
 
 export function FoodCard({ food }: FoodCardProps) {
+  const [isLoading, setIsLoading] = useState(true);
+
   if (food.available === false) return <></>;
 
   return (
@@ -23,6 +28,7 @@ export function FoodCard({ food }: FoodCardProps) {
         source={{
           uri: food.image,
         }}
+        onLoad={() => setIsLoading(false)}
       />
 
       <Content>

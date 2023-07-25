@@ -22,6 +22,20 @@ import { FoodProps } from "../../@types/FoodProps";
 export default function FoodList() {
   const [isLoading, setIsLoading] = useState(false);
   const [foods, setFoods] = useState([] as FoodProps[]);
+  const [defaultFoods, setDefaultFoods] = useState([] as FoodProps[]);
+
+  function handleFilterFoodsByCategory(categoryId: string) {
+    if (categoryId == "") {
+      setFoods(defaultFoods);
+      return;
+    }
+
+    const filteredFoods = defaultFoods.filter(
+      (food) => food.foodCategory === categoryId
+    );
+
+    setFoods(filteredFoods);
+  }
 
   useMemo(() => {
     const unsubscribe = onSnapshot(collection(dbFirebase, "foods"), (snap) => {
@@ -29,6 +43,7 @@ export default function FoodList() {
       const docs = snap.docs.map((doc) => doc.data() as FoodProps);
 
       setFoods(docs);
+      setDefaultFoods(docs);
       setIsLoading(false);
     });
 
@@ -42,7 +57,11 @@ export default function FoodList() {
         <View>
           <Title>Categorias</Title>
 
-          <CategoriesList />
+          <CategoriesList
+            onPressCategory={(categoryId) =>
+              handleFilterFoodsByCategory(categoryId)
+            }
+          />
         </View>
 
         <View style={{ marginTop: 40 }}>

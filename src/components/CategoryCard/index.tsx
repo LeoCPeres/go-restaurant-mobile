@@ -5,9 +5,12 @@ import Massas from "../../assets/categories/massas.svg";
 import Carnes from "../../assets/categories/carnes.svg";
 
 import { CategoryProps } from "../../@types/CategoryProps";
+import { useEffect, useMemo, useState } from "react";
 
 type CategoryCardProps = {
   category: CategoryProps;
+  isSelected: boolean;
+  onPressCategory: (id: string) => void;
 };
 
 const whichCategoryImage = (categoryName: string) => {
@@ -23,12 +26,24 @@ const whichCategoryImage = (categoryName: string) => {
   }
 };
 
-export function CategoryCard({ category }: CategoryCardProps) {
+export function CategoryCard({
+  category,
+  onPressCategory,
+  isSelected,
+}: CategoryCardProps) {
+  function handlePress() {
+    // if (!isSelected) {
+    //   onPressCategory("");
+    // }
+
+    onPressCategory(category.id);
+  }
+
   return (
-    <Card>
+    <Card onPress={handlePress} isSelected={isSelected}>
       {whichCategoryImage(category.name)}
 
-      <CardTitle>{category.name}</CardTitle>
+      <CardTitle isSelected={isSelected}>{category.name}</CardTitle>
     </Card>
   );
 }
