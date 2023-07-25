@@ -1,14 +1,7 @@
 import { useMemo, useState } from "react";
 import { FlatList, View } from "react-native";
 
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  onSnapshot,
-  updateDoc,
-} from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 
 import { dbFirebase } from "../../../firebaseConfig";
 
@@ -50,10 +43,26 @@ export default function FoodList() {
     return () => unsubscribe();
   }, []);
 
+  function handleSearch(searchParam: string) {
+    if (searchParam != "") {
+      let usersSemAcento = defaultFoods.map((item) => {
+        item.name = item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        return item;
+      });
+
+      const filteredFoods = usersSemAcento.filter((item) => {
+        return item.name.toLowerCase().includes(searchParam.toLowerCase());
+      });
+      setFoods(filteredFoods);
+    } else {
+      setFoods(defaultFoods);
+    }
+  }
+
   return (
     <Container>
-      <SearchBar />
-      <ScrollableContainer>
+      <SearchBar onSearch={(searchParam) => handleSearch(searchParam)} />
+      <ScrollableContainer automaticallyAdjustKeyboardInsets>
         <View>
           <Title>Categorias</Title>
 
