@@ -30,7 +30,7 @@ export const SearchBarView = styled.View`
 
   margin-bottom: -28px;
 
-  background-color: #f0f0f5;
+  background-color: #e7e7eb;
   height: 56px;
   border-radius: 8px;
 
